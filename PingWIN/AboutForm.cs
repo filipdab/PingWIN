@@ -33,97 +33,122 @@ namespace PingWIN
             MinimizeBox = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
-            ClientSize = new Size(520, 280);
             Text = "O autorze";
+
+            // Okno dopasowuje się do zawartości, więc nic nie jest ucinane
+            // ani nie nachodzi na siebie przy skalowaniu ekranu (125%, 150%...).
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Padding = new Padding(24, 16, 24, 20);
 
             var lblTitle = new Label
             {
                 AutoSize = true,
                 Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold),
                 ForeColor = Theme.Text,
-                Location = new Point(24, 18),
+                Margin = new Padding(0, 0, 0, 2),
                 Text = "PingWIN"
             };
 
-            var lblVersion = new Label
-            {
-                AutoSize = true,
-                ForeColor = Theme.MutedText,
-                Location = new Point(28, 60),
-                Text = "Wersja " + version.ToString(3)
-            };
-
-            var lblDescription = new Label
-            {
-                AutoSize = true,
-                ForeColor = Theme.MutedText,
-                Location = new Point(28, 82),
-                Text = "Monitor dostępności hostów w czasie rzeczywistym"
-            };
+            var lblVersion = MutedLabel("Wersja " + version.ToString(3));
+            var lblDescription = MutedLabel("Monitor dostępności hostów w czasie rzeczywistym");
 
             var separator = new Panel
             {
+                Anchor = AnchorStyles.Left | AnchorStyles.Right,
                 BackColor = Theme.Border,
-                Location = new Point(28, 114),
-                Size = new Size(464, 1)
+                Height = 1,
+                Margin = new Padding(0, 10, 0, 12)
             };
 
-            var lblAuthorCaption = new Label
-            {
-                AutoSize = true,
-                ForeColor = Theme.MutedText,
-                Location = new Point(28, 128),
-                Text = "Autor:"
-            };
+            var lblAuthorCaption = MutedLabel("Autor:");
+            lblAuthorCaption.Anchor = AnchorStyles.Left;
+            lblAuthorCaption.Margin = new Padding(0, 0, 8, 0);
 
             var lblAuthor = new Label
             {
                 AutoSize = true,
                 Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold),
                 ForeColor = Theme.Accent,
-                Location = new Point(80, 125),
+                Margin = Padding.Empty,
                 Text = Author
             };
 
-            var lblNick = new Label
-            {
-                AutoSize = true,
-                ForeColor = Theme.MutedText,
-                Location = new Point(81, 151),
-                Text = Nick
-            };
+            var lblNick = MutedLabel(Nick);
 
-            var lblCopyright = new Label
+            // Dwie kolumny: "Autor:" | imię i nazwisko, pod spodem nick.
+            var authorTable = new TableLayoutPanel
             {
                 AutoSize = true,
-                ForeColor = Theme.MutedText,
-                Location = new Point(28, 186),
-                Text = "© " + DateTime.Now.Year + " " + Author + ". Wszelkie prawa zastrzeżone."
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 2,
+                RowCount = 2,
+                Margin = new Padding(0, 0, 0, 12)
             };
+            authorTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            authorTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            authorTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            authorTable.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            authorTable.Controls.Add(lblAuthorCaption, 0, 0);
+            authorTable.Controls.Add(lblAuthor, 1, 0);
+            authorTable.Controls.Add(lblNick, 1, 1);
+
+            var lblCopyright = MutedLabel("© " + DateTime.Now.Year + " " + Author + ". Wszelkie prawa zastrzeżone.");
+            lblCopyright.Margin = new Padding(0, 0, 0, 16);
 
             var btnOk = new Button
             {
+                Anchor = AnchorStyles.Right,
+                AutoSize = true,
                 BackColor = Theme.Accent,
                 Cursor = Cursors.Hand,
                 DialogResult = DialogResult.OK,
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold),
                 ForeColor = Color.White,
-                Location = new Point(392, 228),
-                Size = new Size(100, 34),
+                Margin = Padding.Empty,
+                MinimumSize = new Size(100, 34),
                 Text = "OK",
                 UseVisualStyleBackColor = false
             };
             btnOk.FlatAppearance.BorderSize = 0;
 
-            Controls.AddRange(new Control[]
+            var root = new TableLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 1,
+                Location = new Point(Padding.Left, Padding.Top),
+                Margin = Padding.Empty
+            };
+            root.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+
+            foreach (Control c in new Control[]
             {
                 lblTitle, lblVersion, lblDescription, separator,
-                lblAuthorCaption, lblAuthor, lblNick, lblCopyright, btnOk
-            });
+                authorTable, lblCopyright, btnOk
+            })
+            {
+                root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                root.Controls.Add(c);
+            }
+            root.RowCount = root.Controls.Count;
+
+            Controls.Add(root);
 
             AcceptButton = btnOk;
             CancelButton = btnOk;
+        }
+
+        private static Label MutedLabel(string text)
+        {
+            return new Label
+            {
+                AutoSize = true,
+                ForeColor = Theme.MutedText,
+                Margin = new Padding(0, 0, 0, 2),
+                Text = text
+            };
         }
 
         protected override void OnHandleCreated(EventArgs e)
