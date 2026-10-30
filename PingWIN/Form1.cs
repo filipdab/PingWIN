@@ -39,6 +39,7 @@ namespace PingWIN
         {
             InitializeComponent();
 
+            Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
             gridMenu.Renderer = new ToolStripProfessionalRenderer(new DarkColorTable());
             EnableDoubleBuffering(grid);
             LoadHosts();
