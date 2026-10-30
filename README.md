@@ -10,7 +10,7 @@ Monitor dostępności hostów w czasie rzeczywistym dla Windows – prosta aplik
 - Wykres historii ostatnich 40 prób dla każdego hosta
 - Regulowany interwał pingowania i timeout
 - Ręczne pingowanie, reset statystyk i kopiowanie adresów zaznaczonych hostów (menu kontekstowe)
-- Automatyczny zapis listy hostów w `%APPDATA%\PingWIN\hosts.txt`
+- Automatyczny zapis listy hostów w pliku `PingWIN.hosts.txt` obok `PingWIN.exe` – lista przenosi się razem z programem
 - Ciemny pasek tytułu w Windows 10 (20H1+) i Windows 11
 
 ## Wymagania
@@ -28,6 +28,13 @@ msbuild PingWIN\PingWIN.csproj /p:Configuration=Release
 ```
 
 Plik wykonywalny znajdziesz w `PingWIN\bin\Release\PingWIN.exe`.
+
+## Przenoszenie na inny komputer
+
+Lista hostów zapisuje się w pliku `PingWIN.hosts.txt` w tym samym folderze co `PingWIN.exe`. Aby przenieść program razem z listą, skopiuj oba pliki.
+
+- Przy pierwszym uruchomieniu nowej wersji lista zapisana wcześniej w `%APPDATA%\PingWIN\hosts.txt` jest automatycznie przenoszona do nowego pliku.
+- Jeśli folderu programu nie da się zapisać (np. `C:\Program Files`), lista nadal jest trzymana w `%APPDATA%\PingWIN\hosts.txt`.
 
 ## Obsługa
 

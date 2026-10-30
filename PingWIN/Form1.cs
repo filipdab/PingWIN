@@ -24,8 +24,13 @@ namespace PingWIN
         private static readonly Color StopColor = Color.FromArgb(214, 69, 85);
 
         private readonly List<HostEntry> hosts = new List<HostEntry>();
-        private readonly string hostsFile = Path.Combine(
+        private const string PortableHostsFileName = "PingWIN.hosts.txt";
+
+        // Dawna lokalizacja listy – używana, gdy folderu programu nie da się zapisać.
+        private static readonly string LegacyHostsFile = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PingWIN", "hosts.txt");
+
+        private readonly string hostsFile = ResolveHostsFile();
 
         private bool running;
 
@@ -544,20 +549,60 @@ namespace PingWIN
 
         #region Zapis i odczyt listy
 
+        /// <summary>
+        /// Lista hostów trzymana jest obok pliku exe, dzięki czemu przenosi się razem z programem.
+        /// Gdy folderu programu nie da się zapisać (np. Program Files), używany jest %APPDATA%.
+        /// </summary>
+        private static string ResolveHostsFile()
+        {
+            string folder = AppDomain.CurrentDomain.BaseDirectory;
+            string portable = Path.Combine(folder, PortableHostsFileName);
+
+            if (File.Exists(portable) || IsFolderWritable(folder))
+                return portable;
+
+            return LegacyHostsFile;
+        }
+
+        private static bool IsFolderWritable(string folder)
+        {
+            try
+            {
+                string probe = Path.Combine(folder, Path.GetRandomFileName());
+                using (File.Create(probe, 1, FileOptions.DeleteOnClose)) { }
+                return true;
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+            {
+                return false;
+            }
+        }
+
         private void LoadHosts()
         {
-            if (!File.Exists(hostsFile))
+            string source = hostsFile;
+            bool migrate = false;
+
+            if (!File.Exists(source) && File.Exists(LegacyHostsFile))
+            {
+                // Przeniesienie listy zapisanej przez starsze wersje w %APPDATA%.
+                source = LegacyHostsFile;
+                migrate = true;
+            }
+
+            if (!File.Exists(source))
             {
                 // Pierwsze uruchomienie – kilka przykładowych adresów.
                 AddHost("8.8.8.8", "Google DNS", showErrors: false);
                 AddHost("1.1.1.1", "Cloudflare DNS", showErrors: false);
                 AddHost("127.0.0.1", "Localhost", showErrors: false);
+                SaveHosts();
                 return;
             }
 
             try
             {
-                foreach (string line in File.ReadAllLines(hostsFile, Encoding.UTF8))
+                foreach (string line in File.ReadAllLines(source, Encoding.UTF8))
                 {
                     string[] parts = line.Split('\t');
                     if (parts.Length == 2)
@@ -568,7 +613,11 @@ namespace PingWIN
             {
                 MessageBox.Show(this, "Nie udało się wczytać listy hostów:\n" + ex.Message, "PingWIN",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
+
+            if (migrate)
+                SaveHosts();
         }
 
         private void SaveHosts()
