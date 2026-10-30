@@ -12,7 +12,8 @@ namespace PingWIN
     internal sealed class AboutForm : Form
     {
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
-        private const string Author = "filipdab";
+        private const string Author = "Filip Dąbrowski";
+        private const string Nick = "filipdab";
 
         [DllImport("dwmapi.dll")]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
@@ -32,7 +33,7 @@ namespace PingWIN
             MinimizeBox = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
-            ClientSize = new Size(420, 250);
+            ClientSize = new Size(520, 280);
             Text = "O autorze";
 
             var lblTitle = new Label
@@ -64,7 +65,7 @@ namespace PingWIN
             {
                 BackColor = Theme.Border,
                 Location = new Point(28, 114),
-                Size = new Size(364, 1)
+                Size = new Size(464, 1)
             };
 
             var lblAuthorCaption = new Label
@@ -84,11 +85,19 @@ namespace PingWIN
                 Text = Author
             };
 
+            var lblNick = new Label
+            {
+                AutoSize = true,
+                ForeColor = Theme.MutedText,
+                Location = new Point(81, 151),
+                Text = Nick
+            };
+
             var lblCopyright = new Label
             {
                 AutoSize = true,
                 ForeColor = Theme.MutedText,
-                Location = new Point(28, 156),
+                Location = new Point(28, 186),
                 Text = "© " + DateTime.Now.Year + " " + Author + ". Wszelkie prawa zastrzeżone."
             };
 
@@ -100,7 +109,7 @@ namespace PingWIN
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold),
                 ForeColor = Color.White,
-                Location = new Point(292, 198),
+                Location = new Point(392, 228),
                 Size = new Size(100, 34),
                 Text = "OK",
                 UseVisualStyleBackColor = false
@@ -110,7 +119,7 @@ namespace PingWIN
             Controls.AddRange(new Control[]
             {
                 lblTitle, lblVersion, lblDescription, separator,
-                lblAuthorCaption, lblAuthor, lblCopyright, btnOk
+                lblAuthorCaption, lblAuthor, lblNick, lblCopyright, btnOk
             });
 
             AcceptButton = btnOk;

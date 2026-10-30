@@ -41,4 +41,4 @@ Plik wykonywalny znajdziesz w `PingWIN\bin\Release\PingWIN.exe`.
 
 ## Autor
 
-**filipdab**
+**Filip Dąbrowski** ([filipdab](https://github.com/filipdab))

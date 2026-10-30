@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -58,7 +57,7 @@
             this.colLoss = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSentReceived = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colHistory = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.gridMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.gridMenu = new System.Windows.Forms.ContextMenuStrip();
             this.menuPingNow = new System.Windows.Forms.ToolStripMenuItem();
             this.menuReset = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCopy = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,7 +69,7 @@
             this.btnReset = new System.Windows.Forms.Button();
             this.btnPingNow = new System.Windows.Forms.Button();
             this.lblSummary = new System.Windows.Forms.Label();
-            this.pingTimer = new System.Windows.Forms.Timer(this.components);
+            this.pingTimer = new System.Windows.Forms.Timer();
             this.panelHeader.SuspendLayout();
             this.panelInput.SuspendLayout();
             this.flowInput.SuspendLayout();
